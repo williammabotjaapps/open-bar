@@ -1,26 +1,23 @@
 <script setup>
-
-const dontPlayMusic = () => {
-  console.log("User chose not to play music.");
-};
+import { RouterLink } from 'vue-router';
 </script>
 
 <template>
-  <div class="flex h-screen">
-    <div class="w-1/2 bg-gray-900">
-    </div>
-    <div class="w-1/2 bg-gray-800 p-4 flex items-center justify-center">
-      <h3>No, Thanks</h3>
-      <button
-        @click="dontPlayMusic"
-        class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Don't Play Music
-      </button>
-    </div>
+  <div class="background-image p-4 flex items-center justify-center h-full">
+    <h3 class="text-white mr-4">No, Thanks</h3>
+    <RouterLink
+      to="/tab"
+      class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+    >
+      Don't Play Music
+    </RouterLink>
   </div>
 </template>
 
 <style scoped>
-
+.background-image {
+  background-image: url('@/assets/images/noMusic.jpg');
+  background-size: cover;
+  background-position: center;
+}
 </style>
