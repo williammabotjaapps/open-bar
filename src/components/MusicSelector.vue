@@ -29,7 +29,7 @@ const selectGenre = (genre) => {
 
 <style>
 .background-image {
-  background-image: url('../assets/images/drinksWelcome.jpg');
+  background-image: url('../assets/images/musicSelector.jpg');
   background-size: cover;
   background-position: center;
 }
