@@ -26,7 +26,7 @@
           @click="increaseCount"
           class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 px-8 rounded"
         >
-          Add Friends
+          Continue
         </button>
       </div>
     </div>
