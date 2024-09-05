@@ -20,10 +20,10 @@
             router.push('/tab');
             toast.success('Updated Friends Count!');
         }
-    } catch (error) {
-        console.error('Error updating friends preferences:', error);
-        toast.error('Failed to Update Friends Count!');
-    }
+        } catch (error) {
+            console.error('Error updating friends preferences:', error);
+            toast.error('Failed to Update Friends Count!');
+        }
     };
 
   </script>

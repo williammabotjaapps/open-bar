@@ -23,7 +23,7 @@
     "selectedGenre": ""
   },
   "friends": {
-    "withFriends": false,
-    "numberOfFriends": 0
+    "withFriends": true,
+    "numberOfFriends": 4
   }
 }
