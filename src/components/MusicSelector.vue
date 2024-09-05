@@ -1,25 +1,27 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
 import axios from 'axios';
 
 const genres = ref(['Amapiano', 'Pop', 'Hip Hop', 'Jazz']);
 
 const router = useRouter();
 
+const toast = useToast();
+
 const selectGenre = async (genre) => {
-  console.log(`Selected genre: ${genre}`);
   
   try {
     const response = await axios.put('/api/music', {
       playMusic: true,
-      selectedGenre: genre,
+      selectedGenre: genre.toLowerCase(),
     });
-    
-    console.log('Response from API:', response.data);
-    router.push('friends');
+    router.push('/friends');
+    toast.success('Music Activated!');
   } catch (error) {
     console.error('Error updating music preferences:', error);
+    toast.error('Music Activation Failed!');
   }
 };
 </script>
