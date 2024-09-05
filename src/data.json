@@ -1,26 +1,25 @@
 {
-    "beverages": [
-      {
-        "id": 1,
-        "name": "Beer",
-        "price": 5.00
-      },
-      {
-        "id": 2,
-        "name": "Wine",
-        "price": 8.00
-      },
-      {
-        "id": 3,
-        "name": "Cocktail",
-        "price": 10.00
-      }
-    ],
-    "orders": [],
-    "tabs": [],
-    "music": {
-      "playMusic": false,
-      "selectedGenre": ""
+  "beverages": [
+    {
+      "id": "1",
+      "name": "Beer",
+      "price": 5
+    },
+    {
+      "id": "2",
+      "name": "Wine",
+      "price": 8
+    },
+    {
+      "id": "3",
+      "name": "Cocktail",
+      "price": 10
     }
+  ],
+  "orders": [],
+  "tabs": [],
+  "music": {
+    "playMusic": true,
+    "selectedGenre": "Pop"
   }
-  
+}
