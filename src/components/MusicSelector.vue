@@ -11,13 +11,14 @@ const selectGenre = (genre) => {
 <template>
   <div class="flex h-screen">
     <div class="w-1/2 bg-gray-800 p-4">
-      <h2 class="text-white text-2xl mb-4">Select a Genre</h2>
-      <div class="flex flex-col space-y-2">
+      <h3 class="text-white text-2xl mb-4 mt-8 text-center">Before we begin... Would you like some Music while you order your drinks</h3>
+      <h2 class="text-white text-4xl mb-8 text-center">Select a Genre</h2>
+      <div class="flex flex-col space-y-8">
         <button
           v-for="genre in genres"
           :key="genre"
           @click="selectGenre(genre)"
-          class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded"
         >
           {{ genre }}
         </button>
@@ -26,6 +27,10 @@ const selectGenre = (genre) => {
   </div>
 </template>
 
-<style scoped>
-
+<style>
+.background-image {
+  background-image: url('../assets/images/drinksWelcome.jpg');
+  background-size: cover;
+  background-position: center;
+}
 </style>
