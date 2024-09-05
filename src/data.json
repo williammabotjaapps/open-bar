@@ -19,7 +19,7 @@
   "orders": [],
   "tabs": [],
   "music": {
-    "playMusic": true,
-    "selectedGenre": "amapiano"
+    "playMusic": false,
+    "selectedGenre": ""
   }
 }
