@@ -19,7 +19,11 @@
   "orders": [],
   "tabs": [],
   "music": {
-    "playMusic": true,
-    "selectedGenre": "jazz"
+    "playMusic": false,
+    "selectedGenre": ""
+  },
+  "friends": {
+    "withFriends": false,
+    "numberOfFriends": 0
   }
 }
