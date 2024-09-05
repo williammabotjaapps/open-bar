@@ -19,8 +19,8 @@
           type="number"
           v-model="friendCount"
           class="text-center text-4xl border border-gray-300 rounded p-2"
-          min="0"
-          placeholder="0"
+          min="1"
+          placeholder="1"
         />
         <button
           @click="increaseCount"
