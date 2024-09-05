@@ -5,6 +5,7 @@ import NoMusic from '@/components/NoMusic.vue';
 
 <template>
   <div class="flex h-screen">
+
     <div class="w-1/2">
       <MusicSelector />
     </div>

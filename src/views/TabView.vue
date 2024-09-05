@@ -3,5 +3,9 @@ import MusicTopBar from '@/components/MusicTopBar.vue';
 </script>
 
 <template>
-<MusicTopBar />
+    <MusicTopBar />
 </template>
+
+<style scoped>
+
+</style>
