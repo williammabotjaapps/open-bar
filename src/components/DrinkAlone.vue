@@ -9,14 +9,14 @@ import { RouterLink } from 'vue-router';
       to="/tab"
       class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
     >
-      Don't Play Music
+      Drink Alone
     </RouterLink>
   </div>
 </template>
 
 <style scoped>
 .background-image {
-  background-image: url('@/assets/images/noMusic.jpg');
+  background-image: url('@/assets/images/drinkAlone.jpg');
   background-size: cover;
   background-position: center;
 }
