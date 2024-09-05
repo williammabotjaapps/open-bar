@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import axios from 'axios';
 
-const genres = ref(['Amapiano', 'Pop', 'Hip Hop', 'Jazz']);
+const genres = ref(['Amapiano', 'Pop', 'HipHop', 'Jazz']);
 
 const router = useRouter();
 

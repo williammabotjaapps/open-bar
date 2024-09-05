@@ -19,7 +19,7 @@
   "orders": [],
   "tabs": [],
   "music": {
-    "playMusic": false,
-    "selectedGenre": ""
+    "playMusic": true,
+    "selectedGenre": "jazz"
   }
 }
