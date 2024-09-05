@@ -18,6 +18,9 @@
     ],
     "orders": [],
     "tabs": [],
-    "music": []
+    "music": {
+      "playMusic": false,
+      "selectedGenre": ""
+    }
   }
   

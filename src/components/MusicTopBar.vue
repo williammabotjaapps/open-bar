@@ -1,6 +1,6 @@
 
 <script setup>
-import { reactive, onMounted } from 'vue';
+import { reactive, onMounted, onUnmounted } from 'vue';
 import { Howl } from 'howler';
 
 import audioSrc from '/music/amapiano.mp3';
@@ -42,6 +42,12 @@ const stop = () => {
 onMounted(() => {
   initSound();
 });
+
+onUnmounted(() => {
+  if (state.sound) {
+    state.sound.stop();
+  }
+});
 </script>
 
 <style scoped>
@@ -50,7 +56,7 @@ onMounted(() => {
 
 
 <template>
-    <header class="bg-gray-800 text-white p-4 flex items-center justify-between">
+    <header class="bg-black text-white p-4 flex items-center justify-between">
       <h1 class="text-xl font-bold">My Music Player</h1>
       <div class="flex items-center">
         <button @click="play" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">

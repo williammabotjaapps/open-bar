@@ -3,6 +3,7 @@ import HomeView from '@/views/HomeView.vue'
 import MusicView from '@/views/MusicView.vue'
 import TabView from '@/views/TabView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
+import FriendsView from '@/views/FriendsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,6 +22,11 @@ const router = createRouter({
       path: '/tab',
       name: 'tab',
       component: TabView
+    },
+    {
+      path: '/friends',
+      name: 'friends',
+      component: FriendsView
     },
     {
       path: '/:catchAll(.*)',
