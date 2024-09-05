@@ -18,7 +18,7 @@ const selectGenre = (genre) => {
           v-for="genre in genres"
           :key="genre"
           @click="selectGenre(genre)"
-          class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded"
+          class="bg-orange-800 hover:bg-orange-700 text-white font-bold py-4 px-8 rounded"
         >
           {{ genre }}
         </button>
