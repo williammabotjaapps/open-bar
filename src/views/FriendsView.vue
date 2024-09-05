@@ -5,7 +5,6 @@ import DrinkAlone from '@/components/DrinkAlone.vue';
 
 <template>
   <div class="flex h-screen">
-
     <div class="w-1/2">
       <FriendsSelector />
     </div>

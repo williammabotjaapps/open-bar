@@ -1,16 +1,34 @@
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
+import axios from 'axios';
 
-const genres = ref(['Amapiano', 'Pop', 'Hip Hop', 'Jazz']);
+const genres = ref(['Amapiano', 'Pop', 'HipHop', 'Jazz']);
 
-const selectGenre = (genre) => {
-  console.log(`Selected genre: ${genre}`);
-}
+const router = useRouter();
+
+const toast = useToast();
+
+const selectGenre = async (genre) => {
+  
+  try {
+    const response = await axios.put('/api/music', {
+      playMusic: true,
+      selectedGenre: genre.toLowerCase(),
+    });
+    router.push('/friends');
+    toast.success('Music Activated!');
+  } catch (error) {
+    console.error('Error updating music preferences:', error);
+    toast.error('Music Activation Failed!');
+  }
+};
 </script>
 
 <template>
   <div class="background-image p-4 h-full flex flex-col items-center justify-center">
-    <h3 class="text-white text-2xl mb-4 mt-8 text-center">Before we begin... Would you like some Music while you order your drinks</h3>
+    <h3 class="text-white text-2xl mb-4 mt-8 text-center">Before we begin... Would you like some Music while you order your drinks?</h3>
     <h2 class="text-white text-4xl mb-8 text-center">Select a Genre</h2>
     <div class="flex flex-col space-y-8">
       <button

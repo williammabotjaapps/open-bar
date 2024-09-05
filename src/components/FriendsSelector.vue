@@ -1,13 +1,31 @@
 <script setup>
   import { ref } from 'vue';
-  
-  // Create a reactive reference for the number of friends
-  const friendCount = ref(0);
-  
-  // Function to increase the friend count by one
-  const increaseCount = () => {
-    friendCount.value += 1;
-  };
+  import { useRouter } from 'vue-router';
+  import { useToast } from 'vue-toastification';
+  import axios from 'axios';
+
+  const friendsCount = ref(0);
+  const toast = useToast();
+
+  const router = useRouter();
+
+  const continueWithFriends = async () => {
+  try {
+        const response = await axios.put('/api/friends', {
+        withFriends: true,
+        numberOfFriends: friendsCount.value,
+        });
+        if (response.status == 200)
+        {
+            router.push('/tab');
+            toast.success('Updated Friends Count!');
+        }
+        } catch (error) {
+            console.error('Error updating friends preferences:', error);
+            toast.error('Failed to Update Friends Count!');
+        }
+    };
+
   </script>
 
 <template>
@@ -16,17 +34,18 @@
       <h2 class="text-white text-4xl mb-8 text-center">Specify the number of friends</h2>
       <div class="flex flex-col items-center space-y-8">
         <input
-          type="number"
-          v-model="friendCount"
-          class="text-center text-4xl border border-gray-300 rounded p-2"
-          min="0"
-          placeholder="0"
+            type="number"
+            v-model="friendsCount"
+            class="text-center text-4xl border border-gray-300 rounded p-2 w-full max-w-xs md:max-w-md lg:max-w-lg"
+            min="1"
+            placeholder="1"
         />
+
         <button
-          @click="increaseCount"
+          @click="continueWithFriends"
           class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 px-8 rounded"
         >
-          Add Friends
+          Continue
         </button>
       </div>
     </div>
