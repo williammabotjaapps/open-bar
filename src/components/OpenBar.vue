@@ -1,0 +1,151 @@
+<script setup>
+import { ref, computed, onMounted } from 'vue';
+import axios from 'axios'; 
+import jsPDF from 'jspdf';
+
+const beverages = ref([]);
+const tab = ref([]);
+const splitCount = ref(0);
+
+const fetchBeverages = async () => {
+  try {
+    const response = await axios.get('/api/beverages');
+    beverages.value = response.data; 
+  } catch (error) {
+    console.error('Error fetching beverages:', error);
+  }
+};
+
+onMounted(() => {
+  fetchBeverages();
+});
+
+const addToTab = () => {
+  beverages.value.forEach(beverage => {
+    if (beverage.quantity > 0) {
+      tab.value.push({ name: beverage.name, price: beverage.price, quantity: beverage.quantity });
+      beverage.quantity = 0; 
+    }
+  });
+};
+
+const total = computed(() => {
+  return tab.value.reduce((sum, drink) => sum + (drink.price * drink.quantity), 0);
+});
+
+const exportToCSV = () => {
+  const csvContent = "data:text/csv;charset=utf-8," 
+    + tab.value.map(drink => `${drink.name},${drink.quantity},${(drink.price * drink.quantity).toFixed(2)}`).join("\n")
+    + `\nTotal,,${total.value.toFixed(2)}`;
+
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "tab_report.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+const exportToPDF = () => {
+  const doc = new jsPDF();
+  doc.text("Your Tab Report", 20, 20);
+  
+  tab.value.forEach((drink, index) => {
+    doc.text(`${drink.name} (x${drink.quantity}) - R ${(drink.price * drink.quantity).toFixed(2)}`, 20, 30 + (10 * index));
+  });
+  
+  doc.text(`Total: R ${total.value.toFixed(2)}`, 20, 30 + (10 * tab.value.length));
+  
+  if (splitCount.value > 0) {
+    doc.text(`Price per person: R ${(total.value / splitCount.value).toFixed(2)}`, 20, 30 + (10 * (tab.value.length + 1)));
+  }
+
+  doc.save("tab_report.pdf");
+};
+</script>
+
+<template>
+    <div class="dashboard">
+      <h1 class="text-2xl font-bold mb-4">Open Bar Tab</h1>
+      
+      <div class="grid grid-cols-2 gap-4">
+        <div class="order-section">
+          <div class="beverages mb-6">
+            <h2 class="text-xl mb-2">Available Beverages</h2>
+            <div v-for="(beverage, index) in beverages" :key="index" class="beverage-item mb-2">
+              <span>{{ beverage.name }} - R {{ beverage.price.toFixed(2) }}</span>
+              <input
+                v-model.number="beverage.quantity"
+                type="number"
+                min="0"
+                placeholder="Quantity"
+                class="border p-2 rounded ml-2"
+              />
+            </div>
+          </div>
+  
+          <button @click="addToTab" class="bg-blue-500 text-white p-2 rounded mb-4">
+            Add to Tab
+          </button>
+  
+          <div class="tab-section mb-6">
+            <h2 class="text-xl mb-2">Your Tab</h2>
+            <ul>
+              <li v-for="(drink, index) in tab" :key="index">
+                {{ drink.name }} (x{{ drink.quantity }}) - R {{ (drink.price * drink.quantity).toFixed(2) }}
+              </li>
+            </ul>
+          </div>
+        </div>
+  
+        <div class="summary-section">
+          <div class="split-bill mb-4">
+            <h2 class="text-xl mb-2">Split Bill</h2>
+            <input
+              v-model.number="splitCount"
+              type="number"
+              placeholder="Number of People"
+              class="border p-2 rounded"
+            />
+          </div>
+  
+          <p class="font-bold">Total: R {{ total.toFixed(2) }}</p>
+          <p v-if="splitCount > 0" class="font-bold">
+            Price per person: R {{ (total / splitCount).toFixed(2) }}
+          </p>
+  
+          <div class="export-section mt-4">
+            <h2 class="text-xl mb-2">Export Options</h2>
+            <button @click="exportToCSV" class="bg-green-500 text-white p-2 rounded mr-2">
+              Export to CSV
+            </button>
+            <button @click="exportToPDF" class="bg-red-500 text-white p-2 rounded">
+              Export to PDF
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+  
+  <style scoped>
+  .dashboard {
+    padding: 20px;
+    max-width: 800px; 
+    margin: 40px auto;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  .beverage-item {
+    display: flex;
+    align-items: center;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  </style>
+  
