@@ -16,14 +16,152 @@
       "price": 59
     }
   ],
-  "orders": [],
-  "tabs": [],
+  "numberOfRounds": 0,
+  "orders": [
+    {
+      "id": "77c0",
+      "roundNumber": 1,
+      "orderDetails": [
+        {
+          "name": "Beer",
+          "price": 45,
+          "quantity": 4
+        },
+        {
+          "name": "Cider",
+          "price": 52,
+          "quantity": 4
+        },
+        {
+          "name": "Premix",
+          "price": 59,
+          "quantity": 4
+        }
+      ]
+    },
+    {
+      "id": "9338",
+      "roundNumber": 2,
+      "orderDetails": [
+        {
+          "name": "Beer",
+          "price": 45,
+          "quantity": 3
+        },
+        {
+          "name": "Cider",
+          "price": 52,
+          "quantity": 3
+        },
+        {
+          "name": "Premix",
+          "price": 59,
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "id": "61c6",
+      "roundNumber": 1,
+      "orderDetails": [
+        {
+          "name": "Beer",
+          "totalQuantity": 2,
+          "totalPrice": 90
+        },
+        {
+          "name": "Cider",
+          "totalQuantity": 1,
+          "totalPrice": 52
+        },
+        {
+          "name": "Premix",
+          "totalQuantity": 3,
+          "totalPrice": 177
+        }
+      ]
+    },
+    {
+      "id": "92ad",
+      "roundNumber": 2,
+      "orderDetails": [
+        {
+          "name": "Beer",
+          "totalQuantity": 4,
+          "totalPrice": 180
+        },
+        {
+          "name": "Cider",
+          "totalQuantity": 2,
+          "totalPrice": 104
+        },
+        {
+          "name": "Premix",
+          "totalQuantity": 4,
+          "totalPrice": 236
+        }
+      ]
+    },
+    {
+      "id": "2c14",
+      "roundNumber": 3,
+      "orderDetails": [
+        {
+          "name": "Beer",
+          "totalQuantity": 6,
+          "totalPrice": 270
+        },
+        {
+          "name": "Cider",
+          "totalQuantity": 3,
+          "totalPrice": 156
+        },
+        {
+          "name": "Premix",
+          "totalQuantity": 7,
+          "totalPrice": 413
+        }
+      ]
+    }
+  ],
+  "tabs": [
+    {
+      "id": "c97c",
+      "splitCount": 0,
+      "totalPrice": 624,
+      "date": "2024-09-06T05:50:45.521Z"
+    },
+    {
+      "id": "2cf7",
+      "splitCount": 0,
+      "totalPrice": 409,
+      "date": "2024-09-06T05:51:30.472Z"
+    },
+    {
+      "id": "7dbb",
+      "splitCount": 2,
+      "totalPrice": 319,
+      "date": "2024-09-06T05:53:44.496Z"
+    },
+    {
+      "id": "0a39",
+      "splitCount": 2,
+      "totalPrice": 520,
+      "date": "2024-09-06T05:53:50.477Z"
+    },
+    {
+      "id": "1e55",
+      "splitCount": 2,
+      "totalPrice": 839,
+      "date": "2024-09-06T05:53:55.910Z"
+    }
+  ],
   "music": {
-    "playMusic": true,
-    "selectedGenre": "amapiano"
+    "playMusic": false,
+    "selectedGenre": ""
   },
   "friends": {
     "withFriends": true,
-    "numberOfFriends": 5
+    "numberOfFriends": 2
   }
 }

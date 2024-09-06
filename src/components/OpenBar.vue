@@ -1,83 +1,3 @@
-<script setup>
-import { ref, computed, onMounted } from 'vue';
-import axios from 'axios'; 
-import jsPDF from 'jspdf';
-
-const beverages = ref([]);
-const tab = ref([]);
-const splitCount = ref(0);
-
-const fetchBeverages = async () => {
-  try {
-    const response = await axios.get('/api/beverages');
-    beverages.value = response.data; 
-  } catch (error) {
-    console.error('Error fetching beverages:', error);
-  }
-};
-
-const fetchFriends = async () => {
-  try {
-    const response = await axios.get('/api/friends');
-    splitCount.value = response.data.numberOfFriends; 
-  } catch (error) {
-    console.error('Error fetching friends:', error);
-  }
-};
-
-onMounted(() => {
-  fetchBeverages();
-  fetchFriends();
-});
-
-const addToTab = () => {
-  beverages.value.forEach(beverage => {
-    if (beverage.quantity > 0) {
-      tab.value.push({ name: beverage.name, price: beverage.price, quantity: beverage.quantity });
-      beverage.quantity = 0; 
-    }
-  });
-};
-
-const total = computed(() => {
-  return tab.value.reduce((sum, drink) => sum + (drink.price * drink.quantity), 0);
-});
-
-const exportToCSV = () => {
-  const csvContent = "data:text/csv;charset=utf-8," 
-    + tab.value.map(drink => `${drink.name},${drink.quantity},${(drink.price * drink.quantity).toFixed(2)}`).join("\n")
-    + `\nTotal,,${total.value.toFixed(2)}`
-    + `\nPrice per person,,${splitCount.value > 0 ? (total.value / splitCount.value).toFixed(2) : 'N/A'}`; // Added price per person
-
-  const encodedUri = encodeURI(csvContent);
-  const link = document.createElement("a");
-  link.setAttribute("href", encodedUri);
-  link.setAttribute("download", "tab_report.csv");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-};
-
-const exportToPDF = () => {
-  const doc = new jsPDF();
-  doc.text("Your Tab Report", 20, 20);
-  
-  tab.value.forEach((drink, index) => {
-    doc.text(`${drink.name} (x${drink.quantity}) - R ${(drink.price * drink.quantity).toFixed(2)}`, 20, 30 + (10 * index));
-  });
-  
-  doc.text(`Total: R ${total.value.toFixed(2)}`, 20, 30 + (10 * tab.value.length));
-  
-  if (splitCount.value > 0) {
-    doc.text(`Price per person: R ${(total.value / splitCount.value).toFixed(2)}`, 20, 30 + (10 * (tab.value.length + 1)));
-  } else {
-    doc.text(`Price per person: R N/A`, 20, 30 + (10 * (tab.value.length + 1))); // Indicate N/A if no split count
-  }
-
-  doc.save("tab_report.pdf");
-};
-</script>
-
 <template>
     <div class="dashboard">
       <h1 class="text-2xl font-bold mb-4">Open Bar Tab</h1>
@@ -106,7 +26,7 @@ const exportToPDF = () => {
             <h2 class="text-xl mb-2">Your Tab</h2>
             <ul>
               <li v-for="(drink, index) in tab" :key="index">
-                {{ drink.name }} (x{{ drink.quantity }}) - R {{ (drink.price * drink.quantity).toFixed(2) }}
+                {{ drink.name }} (x{{ drink.totalQuantity }}) - R {{ drink.totalPrice.toFixed(2) }}
               </li>
             </ul>
           </div>
@@ -129,6 +49,10 @@ const exportToPDF = () => {
             Price per person: R {{ (total / splitCount).toFixed(2) }}
           </p>
   
+          <div class="round-info mb-4">
+            <h2 class="text-xl mb-2">Current Round: {{ roundNumber }}</h2>
+          </div>
+  
           <div class="export-section mt-4">
             <h2 class="text-xl mb-2">Export Options</h2>
             <button @click="exportToCSV" class="bg-green-500 text-white p-2 rounded mr-2">
@@ -138,10 +62,134 @@ const exportToPDF = () => {
               Export to PDF
             </button>
           </div>
+  
+          <button @click="payTab" class="bg-red-600 text-white p-2 rounded mt-4">
+            Pay Tab
+          </button>
         </div>
       </div>
     </div>
   </template>
+  
+  <script setup>
+  import { ref, computed, onMounted } from 'vue';
+  import axios from 'axios'; 
+  import jsPDF from 'jspdf';
+  
+  const beverages = ref([]);
+  const tab = ref([]);
+  const splitCount = ref(0);
+  const roundNumber = ref(1); 
+  
+  const fetchBeverages = async () => {
+    try {
+      const response = await axios.get('/api/beverages');
+      beverages.value = response.data; 
+    } catch (error) {
+      console.error('Error fetching beverages:', error);
+    }
+  };
+  
+  const fetchFriends = async () => {
+    try {
+      const response = await axios.get('/api/friends');
+      splitCount.value = response.data.numberOfFriends; 
+    } catch (error) {
+      console.error('Error fetching friends:', error);
+    }
+  };
+  
+  onMounted(() => {
+    fetchBeverages();
+    fetchFriends();
+  });
+  
+  const addToTab = async () => {
+    beverages.value.forEach(beverage => {
+      if (beverage.quantity > 0) {
+        const existingDrink = tab.value.find(drink => drink.name === beverage.name);
+        const totalPrice = beverage.price * beverage.quantity;
+  
+        if (existingDrink) {
+          existingDrink.totalQuantity += beverage.quantity;
+          existingDrink.totalPrice += totalPrice; 
+        } else {
+          tab.value.push({ name: beverage.name, totalQuantity: beverage.quantity, totalPrice });
+        }
+  
+        beverage.quantity = 0; 
+      }
+    });
+  
+    if (tab.value.length > 0) {
+      await submitOrder();
+      roundNumber.value++; 
+    }
+  };
+  
+  const submitOrder = async () => {
+    const totalPrice = tab.value.reduce((sum, drink) => sum + drink.totalPrice, 0);
+    const payload = {
+      splitCount: splitCount.value,
+      totalPrice: totalPrice,
+      date: new Date().toISOString(),
+    };
+  
+    try {
+      await axios.post('/api/tabs/', payload);
+      await axios.post('/api/orders', { roundNumber: roundNumber.value, orderDetails: tab.value });
+    } catch (error) {
+      console.error('Error submitting order:', error);
+    }
+  };
+  
+  const total = computed(() => {
+    return tab.value.reduce((sum, drink) => sum + drink.totalPrice, 0);
+  });
+  
+  const exportToCSV = () => {
+    const csvContent = "data:text/csv;charset=utf-8," 
+      + tab.value.map(drink => `${drink.name},${drink.totalQuantity},${drink.totalPrice.toFixed(2)}`).join("\n")
+      + `\nTotal,,${total.value.toFixed(2)}`
+      + `\nPrice per person,,${splitCount.value > 0 ? (total.value / splitCount.value).toFixed(2) : 'N/A'}`; 
+  
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "tab_report.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    doc.text("Your Tab Report", 20, 20);
+    
+    tab.value.forEach((drink, index) => {
+      doc.text(`${drink.name} (x${drink.totalQuantity}) - R ${drink.totalPrice.toFixed(2)}`, 20, 30 + (10 * index));
+    });
+    
+    doc.text(`Total: R ${total.value.toFixed(2)}`, 20, 30 + (10 * tab.value.length));
+    
+    if (splitCount.value > 0) {
+      doc.text(`Price per person: R ${(total.value / splitCount.value).toFixed(2)}`, 20, 30 + (10 * (tab.value.length + 1)));
+    } else {
+      doc.text(`Price per person: R N/A`, 20, 30 + (10 * (tab.value.length + 1)));
+    }
+  
+    doc.text(`Current Round: ${roundNumber.value}`, 20, 30 + (10 * (tab.value.length + 2))); // Added round number to PDF
+  
+    doc.save("tab_report.pdf");
+  };
+  
+  const payTab = () => {
+    beverages.value.forEach(beverage => beverage.quantity = 0);
+    tab.value = [];
+    splitCount.value = 0;
+    roundNumber.value = 1; 
+  };
+  </script>
   
   <style scoped>
   .dashboard {
