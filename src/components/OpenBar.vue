@@ -161,7 +161,7 @@
     const csvContent = "data:text/csv;charset=utf-8," 
       + tab.value.map(drink => `${drink.name},${drink.totalQuantity},${drink.totalPrice.toFixed(2)}`).join("\n")
       + `\nTotal,,${total.value.toFixed(2)}`
-      + `\nPrice per person,,${splitCount.value > 0 ? (total.value / splitCount.value).toFixed(2) : 'N/A'}`; 
+      + `\nPrice per person,,${splitCount.value > 0 ? (total.value / splitCount.value).toFixed(2) : total.value.toFixed(2)}`; 
   
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
@@ -185,7 +185,7 @@
     if (splitCount.value > 0) {
       doc.text(`Price per person: R ${(total.value / splitCount.value).toFixed(2)}`, 20, 30 + (10 * (tab.value.length + 1)));
     } else {
-      doc.text(`Price per person: R N/A`, 20, 30 + (10 * (tab.value.length + 1)));
+      doc.text(`Price per person: R ${(total.value.toFixed(2))}`, 20, 30 + (10 * (tab.value.length + 1)));
     }
   
     doc.text(`Current Round: ${roundNumber.value}`, 20, 30 + (10 * (tab.value.length + 2))); 
