@@ -16,8 +16,18 @@ const fetchBeverages = async () => {
   }
 };
 
+const fetchFriends = async () => {
+  try {
+    const response = await axios.get('/api/friends');
+    splitCount.value = response.data.numberOfFriends; 
+  } catch (error) {
+    console.error('Error fetching friends:', error);
+  }
+};
+
 onMounted(() => {
   fetchBeverages();
+  fetchFriends();
 });
 
 const addToTab = () => {
@@ -36,7 +46,8 @@ const total = computed(() => {
 const exportToCSV = () => {
   const csvContent = "data:text/csv;charset=utf-8," 
     + tab.value.map(drink => `${drink.name},${drink.quantity},${(drink.price * drink.quantity).toFixed(2)}`).join("\n")
-    + `\nTotal,,${total.value.toFixed(2)}`;
+    + `\nTotal,,${total.value.toFixed(2)}`
+    + `\nPrice per person,,${splitCount.value > 0 ? (total.value / splitCount.value).toFixed(2) : 'N/A'}`; // Added price per person
 
   const encodedUri = encodeURI(csvContent);
   const link = document.createElement("a");
@@ -59,6 +70,8 @@ const exportToPDF = () => {
   
   if (splitCount.value > 0) {
     doc.text(`Price per person: R ${(total.value / splitCount.value).toFixed(2)}`, 20, 30 + (10 * (tab.value.length + 1)));
+  } else {
+    doc.text(`Price per person: R N/A`, 20, 30 + (10 * (tab.value.length + 1))); // Indicate N/A if no split count
   }
 
   doc.save("tab_report.pdf");
@@ -107,6 +120,7 @@ const exportToPDF = () => {
               type="number"
               placeholder="Number of People"
               class="border p-2 rounded"
+              disabled
             />
           </div>
   

@@ -3,27 +3,27 @@
     {
       "id": "1",
       "name": "Beer",
-      "price": 5
+      "price": 45
     },
     {
       "id": "2",
-      "name": "Wine",
-      "price": 8
+      "name": "Cider",
+      "price": 52
     },
     {
       "id": "3",
-      "name": "Cocktail",
-      "price": 10
+      "name": "Premix",
+      "price": 59
     }
   ],
   "orders": [],
   "tabs": [],
   "music": {
-    "playMusic": false,
-    "selectedGenre": ""
+    "playMusic": true,
+    "selectedGenre": "amapiano"
   },
   "friends": {
-    "withFriends": false,
-    "numberOfFriends": 0
+    "withFriends": true,
+    "numberOfFriends": 5
   }
 }
