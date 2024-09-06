@@ -2,70 +2,76 @@
     <div class="dashboard">
       <h1 class="text-2xl font-bold mb-4">Open Bar Tab</h1>
       
-      <div class="grid grid-cols-2 gap-4">
-        <div class="order-section">
-          <div class="beverages mb-6">
-            <h2 class="text-xl mb-2">Available Beverages</h2>
-            <div v-for="(beverage, index) in beverages" :key="index" class="beverage-item mb-2">
-              <span>{{ beverage.name }} - R {{ beverage.price.toFixed(2) }}</span>
-              <input
-                v-model.number="beverage.quantity"
-                type="number"
-                min="0"
-                placeholder="Quantity"
-                class="border p-2 rounded ml-2"
-              />
+      <div v-if="loading" class="loader-container">
+        <Loader />
+      </div>
+  
+      <div v-else>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="order-section">
+            <div class="beverages mb-6">
+              <h2 class="text-xl mb-2">Available Beverages</h2>
+              <div v-for="(beverage, index) in beverages" :key="index" class="beverage-item mb-2">
+                <span>{{ beverage.name }} - R {{ beverage.price.toFixed(2) }}</span>
+                <input
+                  v-model.number="beverage.quantity"
+                  type="number"
+                  min="0"
+                  placeholder="Quantity"
+                  class="border p-2 rounded ml-2"
+                />
+              </div>
+            </div>
+  
+            <button @click="addToTab" class="bg-blue-500 text-white p-2 rounded mb-4">
+              Add to Tab
+            </button>
+  
+            <div class="tab-section mb-6">
+              <h2 class="text-xl mb-2">Your Tab</h2>
+              <ul>
+                <li v-for="(drink, index) in tab" :key="index">
+                  {{ drink.name }} (x{{ drink.totalQuantity }}) - R {{ drink.totalPrice.toFixed(2) }}
+                </li>
+              </ul>
             </div>
           </div>
   
-          <button @click="addToTab" class="bg-blue-500 text-white p-2 rounded mb-4">
-            Add to Tab
-          </button>
+          <div class="summary-section">
+            <div class="split-bill mb-4">
+              <h2 class="text-xl mb-2">Split Bill</h2>
+              <input
+                v-model.number="splitCount"
+                type="number"
+                placeholder="Number of People"
+                class="border p-2 rounded"
+                disabled
+              />
+            </div>
   
-          <div class="tab-section mb-6">
-            <h2 class="text-xl mb-2">Your Tab</h2>
-            <ul>
-              <li v-for="(drink, index) in tab" :key="index">
-                {{ drink.name }} (x{{ drink.totalQuantity }}) - R {{ drink.totalPrice.toFixed(2) }}
-              </li>
-            </ul>
-          </div>
-        </div>
+            <p class="font-bold">Total: R {{ total.toFixed(2) }}</p>
+            <p v-if="splitCount > 0" class="font-bold">
+              Price per person: R {{ (total / splitCount).toFixed(2) }}
+            </p>
   
-        <div class="summary-section">
-          <div class="split-bill mb-4">
-            <h2 class="text-xl mb-2">Split Bill</h2>
-            <input
-              v-model.number="splitCount"
-              type="number"
-              placeholder="Number of People"
-              class="border p-2 rounded"
-              disabled
-            />
-          </div>
+            <div class="round-info mb-4">
+              <h2 class="text-xl mb-2">Current Round: {{ roundNumber }}</h2>
+            </div>
   
-          <p class="font-bold">Total: R {{ total.toFixed(2) }}</p>
-          <p v-if="splitCount > 0" class="font-bold">
-            Price per person: R {{ (total / splitCount).toFixed(2) }}
-          </p>
+            <div class="export-section mt-4">
+              <h2 class="text-xl mb-2">Export Options</h2>
+              <button @click="exportToCSV" class="bg-green-500 text-white p-2 rounded mr-2">
+                Export to CSV
+              </button>
+              <button @click="exportToPDF" class="bg-red-500 text-white p-2 rounded">
+                Export to PDF
+              </button>
+            </div>
   
-          <div class="round-info mb-4">
-            <h2 class="text-xl mb-2">Current Round: {{ roundNumber }}</h2>
-          </div>
-  
-          <div class="export-section mt-4">
-            <h2 class="text-xl mb-2">Export Options</h2>
-            <button @click="exportToCSV" class="bg-green-500 text-white p-2 rounded mr-2">
-              Export to CSV
-            </button>
-            <button @click="exportToPDF" class="bg-red-500 text-white p-2 rounded">
-              Export to PDF
+            <button @click="payTab" class="bg-red-600 text-white p-2 rounded mt-4">
+              Pay Tab
             </button>
           </div>
-  
-          <button @click="payTab" class="bg-red-600 text-white p-2 rounded mt-4">
-            Pay Tab
-          </button>
         </div>
       </div>
     </div>
@@ -75,11 +81,13 @@
   import { ref, computed, onMounted } from 'vue';
   import axios from 'axios'; 
   import jsPDF from 'jspdf';
+  import Loader from './Loader.vue'; 
   
   const beverages = ref([]);
   const tab = ref([]);
   const splitCount = ref(0);
   const roundNumber = ref(1); 
+  const loading = ref(true); 
   
   const fetchBeverages = async () => {
     try {
@@ -87,6 +95,8 @@
       beverages.value = response.data; 
     } catch (error) {
       console.error('Error fetching beverages:', error);
+    } finally {
+      loading.value = false; 
     }
   };
   
@@ -178,7 +188,7 @@
       doc.text(`Price per person: R N/A`, 20, 30 + (10 * (tab.value.length + 1)));
     }
   
-    doc.text(`Current Round: ${roundNumber.value}`, 20, 30 + (10 * (tab.value.length + 2))); // Added round number to PDF
+    doc.text(`Current Round: ${roundNumber.value}`, 20, 30 + (10 * (tab.value.length + 2))); 
   
     doc.save("tab_report.pdf");
   };
@@ -208,6 +218,9 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
+  }
+  .loader-container {
+    height: 100px; 
   }
   </style>
   

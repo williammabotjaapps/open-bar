@@ -122,6 +122,69 @@
           "totalPrice": 413
         }
       ]
+    },
+    {
+      "id": "d2b0",
+      "roundNumber": 1,
+      "orderDetails": [
+        {
+          "name": "Beer",
+          "totalQuantity": 4,
+          "totalPrice": 180
+        },
+        {
+          "name": "Cider",
+          "totalQuantity": 1,
+          "totalPrice": 52
+        },
+        {
+          "name": "Premix",
+          "totalQuantity": 2,
+          "totalPrice": 118
+        }
+      ]
+    },
+    {
+      "id": "3935",
+      "roundNumber": 2,
+      "orderDetails": [
+        {
+          "name": "Beer",
+          "totalQuantity": 8,
+          "totalPrice": 360
+        },
+        {
+          "name": "Cider",
+          "totalQuantity": 2,
+          "totalPrice": 104
+        },
+        {
+          "name": "Premix",
+          "totalQuantity": 7,
+          "totalPrice": 413
+        }
+      ]
+    },
+    {
+      "id": "c227",
+      "roundNumber": 3,
+      "orderDetails": [
+        {
+          "name": "Beer",
+          "totalQuantity": 8,
+          "totalPrice": 360
+        },
+        {
+          "name": "Cider",
+          "totalQuantity": 2,
+          "totalPrice": 104
+        },
+        {
+          "name": "Premix",
+          "totalQuantity": 9,
+          "totalPrice": 531
+        }
+      ]
     }
   ],
   "tabs": [
@@ -154,14 +217,32 @@
       "splitCount": 2,
       "totalPrice": 839,
       "date": "2024-09-06T05:53:55.910Z"
+    },
+    {
+      "id": "369c",
+      "splitCount": 8,
+      "totalPrice": 350,
+      "date": "2024-09-06T06:07:44.951Z"
+    },
+    {
+      "id": "d6c6",
+      "splitCount": 8,
+      "totalPrice": 877,
+      "date": "2024-09-06T06:07:55.089Z"
+    },
+    {
+      "id": "22b8",
+      "splitCount": 8,
+      "totalPrice": 995,
+      "date": "2024-09-06T06:07:58.225Z"
     }
   ],
   "music": {
-    "playMusic": false,
-    "selectedGenre": ""
+    "playMusic": true,
+    "selectedGenre": "pop"
   },
   "friends": {
     "withFriends": true,
-    "numberOfFriends": 2
+    "numberOfFriends": 8
   }
 }
