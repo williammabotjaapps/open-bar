@@ -1,9 +1,29 @@
-# Project Title
+# Open Bar Tab Web App
 
-## Overview
-This project utilizes **JSON-Server** to create a mock backend for rapid development and testing. It provides a simple way to simulate a RESTful API, allowing you to focus on building your frontend without waiting for a backend to be ready.
+## Project Description
+**Open Bar Tab Web App** can to provide users with an efficient and straightforward way to manage their drink orders, ensuring a smooth experience in social settings.
 
-I am aware the persistent layer is optional but I wanted to showcase my REST capabilities in a Production type of environment. 
+### User Functionality
+
+In the Open Bar Tab Web App, users can:
+
+- **View Beverages**: Access a list of **three different kinds of beverages** available for ordering.
+  
+- **Specify Beverage Quantities**: Enter the desired quantity for each type of beverage when placing a **“round of drinks.”**
+  
+- **Submit Orders**: Easily add the specified beverage orders to their open tab using, keeping track of what they’ve ordered.
+  
+- **Split the Bill**: Optionally enter the number of people sharing the total bill, facilitating accurate cost distribution among friends.
+  
+- **Request Total Bill**: At any time, users can request the **total of their bill**, which includes a breakdown of the cost per person if applicable.
+  
+- **Export Tab**: Export the tab as a CSV or PDF, providing a formal receipt that can be given to customers.
+
+## Features
+
+- **Responsive Design**: The app is responsive and functional across various devices, ensuring a seamless user experience.
+- **User-Friendly Interface**: An intuitive interface makes navigation and ordering straightforward for users.
+- **Data Persistence**: A mock backend (like JSON-Server) is utilized to store and retrieve orders as necessary.
 
 ## Usage
 

@@ -205,7 +205,7 @@
             </div>
   
             <button @click="addToTab" class="bg-blue-500 text-white p-2 rounded mb-4">
-              Add to Tab
+              Submit Order
             </button>
   
             <div class="tab-section mb-6">
