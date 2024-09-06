@@ -32,11 +32,12 @@ To get started, you need to install the necessary dependencies. Run the followin
 
 ```bash
 npm install
-
+```
 ### Run the Server
 
 ```bash
 npm run server
+```
 
 #### This will launch a Server on Port 5000
 
@@ -44,6 +45,7 @@ npm run server
 
 ```bash
 npm run dev
+```
 
 #### This will lauch the UI Client on Port 3000
 
