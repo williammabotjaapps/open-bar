@@ -1,29 +1,37 @@
-# open-bar
+# Project Title
 
-This template should help get you started developing with Vue 3 in Vite.
+## Overview
+This project utilizes **JSON-Server** to create a mock backend for rapid development and testing. It provides a simple way to simulate a RESTful API, allowing you to focus on building your frontend without waiting for a backend to be ready.
 
-## Recommended IDE Setup
+I am aware the persistent layer is optional but I wanted to showcase my REST capabilities in a Production type of environment. 
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Usage
 
-## Customize configuration
+### Install Dependencies
+To get started, you need to install the necessary dependencies. Run the following command in your terminal:
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
+```bash
 npm install
-```
 
-### Compile and Hot-Reload for Development
+### Run the Server
 
-```sh
+```bash
+npm run server
+
+#### This will launch a Server on Port 5000
+
+### Run the development client
+
+```bash
 npm run dev
-```
 
-### Compile and Minify for Production
+#### This will lauch the UI Client on Port 3000
 
-```sh
-npm run build
-```
+# Features
+
+- Onboarding Journey with Mood Music Selection and Friends Selection for Bill splitting
+- Order Dashboard with Tabs, Rounds 
+- Ability to Pay tab 
+- Music Player to get you in the Mood
+
+### Enjoy testing the App!
