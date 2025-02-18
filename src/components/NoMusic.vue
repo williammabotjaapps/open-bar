@@ -3,21 +3,29 @@ import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 
+// Initialize toast and router
 const toast = useToast();
-
 const router = useRouter();
 
+// Base API URL from environment variables
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
+// Function to deactivate music
 const deactivateMusic = async () => {
-  
   try {
-    const response = await axios.put('/api/music', {
+    // Make API call to update music preferences
+    const response = await axios.put(`${apiBaseUrl}/music`, {
       playMusic: false,
       selectedGenre: '',
     });
-    if (response.status == 200)
-      router.push('/friends');
+
+    // Handle successful response
+    if (response.status === 200) {
+      router.push('/friends'); // Navigate to the "friends" route
       toast.success('Music Deactivated!');
+    }
   } catch (error) {
+    // Handle errors
     console.error('Error updating music preferences:', error);
     toast.error('Music Deactivation Failed!');
   }

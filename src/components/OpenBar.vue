@@ -11,26 +11,30 @@
   const roundNumber = ref(1); 
   const loading = ref(true); 
   const toast = useToast();
+
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
   
   const fetchBeverages = async () => {
-    try {
-      const response = await axios.get('/api/beverages');
-      beverages.value = response.data; 
-    } catch (error) {
-      console.error('Error fetching beverages:', error);
-    } finally {
-      loading.value = false; 
-    }
-  };
-  
-  const fetchFriends = async () => {
-    try {
-      const response = await axios.get('/api/friends');
-      splitCount.value = response.data.numberOfFriends; 
-    } catch (error) {
-      console.error('Error fetching friends:', error);
-    }
-  };
+  try {
+    // Use the environment variable for the base API URL
+    const response = await axios.get(`${apiBaseUrl}/beverages`);
+    beverages.value = response.data; // Update the beverages state
+  } catch (error) {
+    console.error('Error fetching beverages:', error);
+  } finally {
+    loading.value = false; // Ensure loading state is updated
+  }
+};
+
+const fetchFriends = async () => {
+  try {
+    // Use the environment variable for the base API URL
+    const response = await axios.get(`${apiBaseUrl}/friends`);
+    splitCount.value = response.data.numberOfFriends; // Update the splitCount state
+  } catch (error) {
+    console.error('Error fetching friends:', error);
+  }
+};
   
   onMounted(() => {
     fetchBeverages();
@@ -61,20 +65,29 @@
   };
   
   const submitOrder = async () => {
-    const totalPrice = tab.value.reduce((sum, drink) => sum + drink.totalPrice, 0);
-    const payload = {
-      splitCount: splitCount.value,
-      totalPrice: totalPrice,
-      date: new Date().toISOString(),
-    };
-  
-    try {
-      await axios.post('/api/tabs/', payload);
-      await axios.post('/api/orders', { roundNumber: roundNumber.value, orderDetails: tab.value });
-    } catch (error) {
-      console.error('Error submitting order:', error);
-    }
+  // Calculate the total price of the tab
+  const totalPrice = tab.value.reduce((sum, drink) => sum + drink.totalPrice, 0);
+
+  // Prepare the payload for the tab
+  const payload = {
+    splitCount: splitCount.value,
+    totalPrice: totalPrice,
+    date: new Date().toISOString(),
   };
+
+  try {
+
+    await axios.post(`${apiBaseUrl}/tabs/`, payload);
+
+    
+    await axios.post(`${apiBaseUrl}/orders`, {
+      roundNumber: roundNumber.value,
+      orderDetails: tab.value,
+    });
+  } catch (error) {
+    console.error('Error submitting order:', error);
+  }
+};
   
   const total = computed(() => {
     return tab.value.reduce((sum, drink) => sum + drink.totalPrice, 0);
@@ -120,61 +133,70 @@
 
   const deleteAllOrderItems = async () => {
   try {
-    const response = await axios.get('/api/orders/');
+
+    // Fetch all order items
+    const response = await axios.get(`${apiBaseUrl}/orders/`);
     const items = response.data;
 
+    // Delete all order items
     const deletePromises = items.map(item => {
-      return axios.delete(`/api/orders/${item.id}`);
+      return axios.delete(`${apiBaseUrl}/orders/${item.id}`);
     });
 
     await Promise.all(deletePromises);
-    console.log('All items deleted successfully.');
-    } catch (error) {
-        console.error('Error deleting items:', error);
-    }
-  };
+    console.log('All order items deleted successfully.');
+  } catch (error) {
+    console.error('Error deleting order items:', error);
+  }
+};
 
-  const deleteAllTabItems = async () => {
+const deleteAllTabItems = async () => {
   try {
-    const response = await axios.get('/api/tabs/');
+
+    // Fetch all tab items
+    const response = await axios.get(`${apiBaseUrl}/tabs/`);
     const items = response.data;
 
+    // Delete all tab items
     const deletePromises = items.map(item => {
-      return axios.delete(`/api/tabs/${item.id}`);
+      return axios.delete(`${apiBaseUrl}/tabs/${item.id}`);
     });
 
     await Promise.all(deletePromises);
-    console.log('All items deleted successfully.');
+    console.log('All tab items deleted successfully.');
+  } catch (error) {
+    console.error('Error deleting tab items:', error);
+  }
+};
 
-    } catch (error) {
-        console.error('Error deleting items:', error);
-    }
-  };
-  
-  const payTab = async () => {
-
+const payTab = async () => {
   loading.value = true;
 
   try {
 
-    deleteAllOrderItems();
+    // Delete all order and tab items
+    await deleteAllOrderItems();
+    await deleteAllTabItems();
 
-    deleteAllTabItems();
+    // Reset music preferences
+    await axios.put(`${apiBaseUrl}/music/`, { playMusic: false, selectedGenre: '' });
 
-    await axios.put('/api/music/', { playMusic: false, selectedGenre: '' });
+    // Reset friends preferences
+    await axios.put(`${apiBaseUrl}/friends/`, { withFriends: false, numberOfFriends: 0 });
 
-    await axios.put('/api/friends/', { withFriends: false, numberOfFriends: 0 });
-
-    beverages.value.forEach(beverage => beverage.quantity = 0);
+    // Reset beverages, tab, split count, and round number
+    beverages.value.forEach(beverage => (beverage.quantity = 0));
     tab.value = [];
     splitCount.value = 0;
     roundNumber.value = 1;
+
+    // Show success message
     toast.success('Tab Paid Up!');
   } catch (error) {
     console.error('Error resetting data:', error);
     toast.error('Error Paying Tab');
   } finally {
-    loading.value = false; 
+    loading.value = false;
   }
 };
   </script>

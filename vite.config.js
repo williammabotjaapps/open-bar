@@ -9,7 +9,7 @@ export default defineConfig({
     vue(),
   ],
   server: {
-    port: 80,
+    port: 3000,
     proxy: {
       '/api': {
         target: 'https://open-bar-demo.appspaza.com/',

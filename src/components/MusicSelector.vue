@@ -4,22 +4,32 @@ import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import axios from 'axios';
 
+// Reactive array for genres
 const genres = ref(['Amapiano', 'Pop', 'HipHop', 'Jazz']);
 
+// Initialize router and toast
 const router = useRouter();
-
 const toast = useToast();
 
+// Base API URL from environment variables
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
+// Function to handle genre selection
 const selectGenre = async (genre) => {
-  
   try {
-    const response = await axios.put('/api/music', {
+    // Make API call to update music preferences
+    const response = await axios.put(`${apiBaseUrl}/music`, {
       playMusic: true,
       selectedGenre: genre.toLowerCase(),
     });
-    router.push('/friends');
-    toast.success('Music Activated!');
+
+    // Handle successful response
+    if (response.status === 200) {
+      router.push('/friends'); // Navigate to the "friends" route
+      toast.success('Music Activated!');
+    }
   } catch (error) {
+    // Handle errors
     console.error('Error updating music preferences:', error);
     toast.error('Music Activation Failed!');
   }
@@ -28,9 +38,12 @@ const selectGenre = async (genre) => {
 
 <template>
   <div class="background-image p-4 h-full flex flex-col items-center justify-center">
-    <h3 class="text-white text-2xl mb-4 mt-8 text-center">Before we begin... Would you like some Music while you order your drinks?</h3>
+    <h3 class="text-white text-2xl mb-4 mt-8 text-center">
+      Before we begin... Would you like some Music while you order your drinks?
+    </h3>
     <h2 class="text-white text-4xl mb-8 text-center">Select a Genre</h2>
     <div class="flex flex-col space-y-8">
+      <!-- Buttons for each genre -->
       <button
         v-for="genre in genres"
         :key="genre"

@@ -1,28 +1,35 @@
 <script setup>
-import { RouterLink } from 'vue-router';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import axios from 'axios';
 
+// Initialize router and toast
 const router = useRouter();
 const toast = useToast();
 
+// Base API URL from environment variables
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
+// Function to handle "Drink Alone" action
 const drinkAlone = async () => {
   try {
-        const response = await axios.put('/api/friends', {
-        withFriends: false,
-        numberOfFriends: 0,
-        });
-        if (response.status == 200)
-        {
-            router.push('/tab');
-            toast.success('Updated Friends Count!');
-        }
-        } catch (error) {
-            console.error('Error updating friends preferences:', error);
-            toast.error('Failed to Update Friends Count!');
-        }
-    };
+    // Make API call to update friends preferences
+    const response = await axios.put(`${apiBaseUrl}/friends`, {
+      withFriends: false,
+      numberOfFriends: 0,
+    });
+
+    // Handle successful response
+    if (response.status === 200) {
+      router.push('/tab'); // Navigate to the "tab" route
+      toast.success('Updated Friends Count!');
+    }
+  } catch (error) {
+    // Handle errors
+    console.error('Error updating friends preferences:', error);
+    toast.error('Failed to Update Friends Count!');
+  }
+};
 </script>
 
 <template>
