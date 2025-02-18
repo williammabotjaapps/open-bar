@@ -12,7 +12,7 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'https://18.212.101.79:5000',
+        target: 'https://open-bar-demo.appspaza.com/',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
