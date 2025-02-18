@@ -26,9 +26,11 @@ const state = reactive({
   selectedGenre: '',
 });
 
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
 const initSound = () => {
   if (state.playMusic) {
-    const audioSrc = `/media/${state.selectedGenre}.mp3`;
+    const audioSrc = `{apiBaseUrl}/music/${state.selectedGenre}.mp3`;
     state.sound = new Howl({
       src: [audioSrc],
       html5: true,
@@ -61,8 +63,6 @@ const stop = () => {
 
 onMounted(async () => {
   try {
-    // Use the environment variable for the base API URL
-    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
     // Fetch music preferences
     const response = await axios.get(`${apiBaseUrl}/music/`);
