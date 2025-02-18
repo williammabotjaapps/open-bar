@@ -28,7 +28,7 @@ const state = reactive({
 
 const initSound = () => {
   if (state.playMusic) {
-    const audioSrc = `/music/${state.selectedGenre}.mp3`;
+    const audioSrc = `/media/${state.selectedGenre}.mp3`;
     state.sound = new Howl({
       src: [audioSrc],
       html5: true,
