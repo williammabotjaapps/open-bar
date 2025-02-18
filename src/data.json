@@ -17,14 +17,59 @@
     }
   ],
   "numberOfRounds": 0,
-  "orders": [],
-  "tabs": [],
+  "orders": [
+    {
+      "id": "73b6",
+      "roundNumber": 1,
+      "orderDetails": [
+        {
+          "name": "Beer",
+          "totalQuantity": 4,
+          "totalPrice": 180
+        },
+        {
+          "name": "Cider",
+          "totalQuantity": 3,
+          "totalPrice": 156
+        }
+      ]
+    },
+    {
+      "id": "09fa",
+      "roundNumber": 2,
+      "orderDetails": [
+        {
+          "name": "Beer",
+          "totalQuantity": 6,
+          "totalPrice": 270
+        },
+        {
+          "name": "Cider",
+          "totalQuantity": 4,
+          "totalPrice": 208
+        },
+        {
+          "name": "Premix",
+          "totalQuantity": 2,
+          "totalPrice": 118
+        }
+      ]
+    }
+  ],
+  "tabs": [
+    {
+      "id": "bc5b",
+      "splitCount": 2,
+      "totalPrice": 336,
+      "date": "2025-02-18T10:17:02.070Z"
+    }
+  ],
   "music": {
     "playMusic": false,
     "selectedGenre": ""
   },
   "friends": {
-    "withFriends": false,
-    "numberOfFriends": 0
+    "withFriends": true,
+    "numberOfFriends": 2
   }
 }
