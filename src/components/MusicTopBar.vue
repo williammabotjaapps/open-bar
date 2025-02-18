@@ -1,65 +1,86 @@
-<script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { useToast } from 'vue-toastification';
-import axios from 'axios';
-
-// Reactive array for genres
-const genres = ref(['Amapiano', 'Pop', 'HipHop', 'Jazz']);
-
-// Initialize router and toast
-const router = useRouter();
-const toast = useToast();
-
-// Base API URL from environment variables
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
-
-// Function to handle genre selection
-const selectGenre = async (genre) => {
-  try {
-    // Make API call to update music preferences
-    const response = await axios.put(`${apiBaseUrl}/music`, {
-      playMusic: true,
-      selectedGenre: genre.toLowerCase(),
-    });
-
-    // Handle successful response
-    if (response.status === 200) {
-      router.push('/friends'); // Navigate to the "friends" route
-      toast.success('Music Activated!');
-    }
-  } catch (error) {
-    // Handle errors
-    console.error('Error updating music preferences:', error);
-    toast.error('Music Activation Failed!');
-  }
-};
-</script>
-
 <template>
-  <div class="background-image p-4 h-full flex flex-col items-center justify-center">
-    <h3 class="text-white text-2xl mb-4 mt-8 text-center">
-      Before we begin... Would you like some Music while you order your drinks?
-    </h3>
-    <h2 class="text-white text-4xl mb-8 text-center">Select a Genre</h2>
-    <div class="flex flex-col space-y-8">
-      <!-- Buttons for each genre -->
-      <button
-        v-for="genre in genres"
-        :key="genre"
-        @click="selectGenre(genre)"
-        class="bg-orange-800 hover:bg-orange-700 text-white font-bold py-4 px-8 rounded"
-      >
-        {{ genre }}
+  <header v-if="state.playMusic" class="bg-black text-white p-4 flex items-center justify-between">
+    <h1 class="text-xl font-bold">OpenBar Player</h1>
+    <div class="flex items-center">
+      <button @click="play" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+        Play
+      </button>
+      <button @click="pause" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded ml-2">
+        Pause
+      </button>
+      <button @click="stop" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-2">
+        Stop
       </button>
     </div>
-  </div>
+  </header>
 </template>
 
+<script setup>
+import { reactive, onMounted, onUnmounted } from 'vue';
+import { Howl } from 'howler';
+import axios from 'axios';
+
+const state = reactive({
+  sound: null,
+  playMusic: false,
+  selectedGenre: '',
+});
+
+const initSound = () => {
+  if (state.playMusic) {
+    const audioSrc = `/music/${state.selectedGenre}.mp3`;
+    state.sound = new Howl({
+      src: [audioSrc],
+      html5: true,
+      onload: () => {
+        state.sound.play();
+      },
+    });
+  }
+};
+
+const play = () => {
+  if (!state.sound) {
+    initSound();
+  } else {
+    state.sound.play();
+  }
+};
+
+const pause = () => {
+  if (state.sound) {
+    state.sound.pause();
+  }
+};
+
+const stop = () => {
+  if (state.sound) {
+    state.sound.stop();
+  }
+};
+
+onMounted(async () => {
+  try {
+    // Use the environment variable for the base API URL
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
+    // Fetch music preferences
+    const response = await axios.get(`${apiBaseUrl}/music/`);
+    state.playMusic = response.data.playMusic;
+    state.selectedGenre = response.data.selectedGenre;
+    initSound();
+  } catch (error) {
+    console.error('Error fetching music preferences:', error);
+  }
+});
+
+onUnmounted(() => {
+  if (state.sound) {
+    state.sound.stop();
+  }
+});
+</script>
+
 <style scoped>
-.background-image {
-  background-image: url('@/assets/images/musicSelector.jpg');
-  background-size: cover;
-  background-position: center;
-}
+
 </style>
