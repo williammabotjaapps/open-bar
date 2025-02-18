@@ -30,7 +30,7 @@ const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 const initSound = () => {
   if (state.playMusic) {
-    const audioSrc = `{apiBaseUrl}/media/${state.selectedGenre}.mp3`;
+    const audioSrc = `${apiBaseUrl}/media/${state.selectedGenre}.mp3`;
     state.sound = new Howl({
       src: [audioSrc],
       html5: true,
